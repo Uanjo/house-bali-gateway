@@ -22,6 +22,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const [unlocked, setUnlocked] = useState(false);
+  const [secondVideoWatched, setSecondVideoWatched] = useState(false);
+
   return (
     <main className="vsl-page">
       <div className="ambient ambient-one" aria-hidden="true" />
@@ -39,19 +41,47 @@ function Index() {
         <p className="vsl-subheadline">Só quem assiste o vídeo completo libera a entrada na área exclusiva House Bali. Vagas sendo preenchidas agora.</p>
         <p className="vsl-curiosity"><span className="curiosity-spark" aria-hidden="true">✦</span> O que você vai ver a seguir não fica disponível por muito tempo…</p>
         <VslPlayer onUnlock={() => setUnlocked(true)} />
+
         {unlocked && (
           <div className="conversion-area" aria-live="polite">
-            <section className="offer-frame" aria-label="Oferta de acesso exclusivo House Bali">
-              <p className="offer-eyebrow">CONVITE EXCLUSIVO</p>
-              <h2 className="offer-title">Garanta sua exclusividade</h2>
-              <p className="offer-description">Entre na área exclusiva House Bali por apenas</p>
-              <p className="offer-price"><span>R$</span> 9,99</p>
-              <p className="offer-note">Seu acesso começa aqui.</p>
-              <Button variant="checkout" asChild>
-                <a href={vslConfig.checkoutUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackMetaEvent("InitiateCheckout", { content_name: "Acesso exclusivo House Bali", content_ids: "house-bali-access", content_type: "product", value: 9.99, currency: "BRL" }, true)}>QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></a>
-              </Button>
-            </section>
-            <p className="urgency">Oferta por tempo limitado. Esta página pode ser removida a qualquer momento.</p>
+            {!secondVideoWatched ? (
+              <section className="offer-frame" aria-label="Vídeo final House Bali">
+                <p className="offer-eyebrow">ACESSO QUASE LIBERADO</p>
+                <h2 className="offer-title">Antes de entrar, veja isso</h2>
+                <p className="offer-description">Assista a esta última mensagem para conhecer melhor o acesso exclusivo House Bali.</p>
+                {vslConfig.secondVideoUrl ? (
+                  <div className="video-stage second-video-stage">
+                    <video
+                      className="video-media"
+                      src={vslConfig.secondVideoUrl}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      onEnded={() => setSecondVideoWatched(true)}
+                      onContextMenu={(event) => event.preventDefault()}
+                      aria-label="Vídeo final antes da oferta House Bali"
+                    />
+                  </div>
+                ) : (
+                  <p role="alert" className="video-failure">O vídeo final não está configurado no momento.</p>
+                )}
+                <p className="offer-note">A oferta será liberada ao terminar o vídeo.</p>
+              </section>
+            ) : (
+              <>
+                <section className="offer-frame" aria-label="Oferta de acesso exclusivo House Bali">
+                  <p className="offer-eyebrow">CONVITE EXCLUSIVO</p>
+                  <h2 className="offer-title">Garanta sua exclusividade</h2>
+                  <p className="offer-description">Entre na área exclusiva House Bali por apenas</p>
+                  <p className="offer-price"><span>R$</span> 9,99</p>
+                  <p className="offer-note">Seu acesso começa aqui.</p>
+                  <Button variant="checkout" asChild>
+                    <a href={vslConfig.checkoutUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackMetaEvent("InitiateCheckout", { content_name: "Acesso exclusivo House Bali", content_ids: "house-bali-access", content_type: "product", value: 9.99, currency: "BRL" }, true)}>QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></a>
+                  </Button>
+                </section>
+                <p className="urgency">Oferta por tempo limitado. Esta página pode ser removida a qualquer momento.</p>
+              </>
+            )}
           </div>
         )}
       </div>
