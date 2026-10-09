@@ -31,8 +31,9 @@ function Index() {
         <span className="brand-official">O F I C I A L</span>
       </div>
       <div className="vsl-content">
-        <h1 className="vsl-headline"><span className="headline-accent">Acesso Exclusivo Liberado:</span>{" "}Entre Agora na Área Privada House Bali</h1>
-        <p className="vsl-subheadline">Conteúdo premium + acesso direto aos membros. Vagas limitadas.</p>
+        <h1 className="vsl-headline"><span className="headline-accent">Acesso Privado Liberado por Tempo Limitado</span></h1>
+        <p className="vsl-subheadline">Só quem assiste o vídeo completo libera a entrada na área exclusiva House Bali. Vagas sendo preenchidas agora.</p>
+        <p className="vsl-curiosity">O que você vai ver a seguir não fica disponível por muito tempo…</p>
         <VslPlayer onUnlock={() => setUnlocked(true)} />
         {unlocked && (
           <div className="conversion-area" aria-live="polite">
