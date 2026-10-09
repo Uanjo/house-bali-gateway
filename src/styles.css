@@ -4,6 +4,20 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -88,7 +102,7 @@
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 264.695);
+  --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
   --primary: oklch(0.929 0.013 255.508);
   --primary-foreground: oklch(0.208 0.042 265.755);
@@ -119,7 +133,10 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * {
+    border-color: var(--color-border);
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -147,8 +164,8 @@
 .vsl-content { max-width: 880px; margin: 31px auto 0; text-align: center; }
 .vsl-headline { margin: 0 auto; max-width: 790px; font-size: 31px; font-weight: 800; line-height: 1.2; letter-spacing: 0; }
 .headline-accent { color: var(--primary); }
-.vsl-subheadline { max-width: 620px; margin: 18px auto 17px; color: var(--muted-foreground); font-size: 14px; font-weight: 400; line-height: 1.7; }
-.vsl-curiosity { max-width: 620px; margin: 0 auto 18px; color: var(--foreground); font-size: 14px; font-weight: 600; line-height: 1.6; }
+.vsl-subheadline { max-width: 470px; margin: 18px auto 25px; color: var(--muted-foreground); font-size: 14px; font-weight: 400; line-height: 1.7; }
+.vsl-curiosity { max-width: 620px; margin: -8px auto 18px; color: var(--foreground); font-size: 14px; font-weight: 600; line-height: 1.6; }
 .video-stage { position: relative; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid var(--border); border-radius: 6px; background: var(--video-surface); isolation: isolate; }
 .video-media { display: block; width: 100%; height: 100%; object-fit: cover; }
 .video-stage video { object-fit: contain; }
@@ -173,7 +190,7 @@
   .brand-mark { width: 37px; height: 25px; }
   .vsl-content { margin-top: 36px; }
   .vsl-headline { font-size: 48px; line-height: 1.16; }
-  .vsl-subheadline { max-width: 620px; margin-top: 21px; margin-bottom: 17px; font-size: 15px; }
+  .vsl-subheadline { max-width: none; margin-top: 21px; margin-bottom: 32px; font-size: 15px; }
   .vsl-curiosity { font-size: 15px; margin-bottom: 22px; }
   .video-stage { aspect-ratio: 16 / 9; }
   .video-play { width: 78px; height: 78px; }
