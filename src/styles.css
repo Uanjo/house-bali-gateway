@@ -199,3 +199,67 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+
+/* Premium offer frame revealed after the VSL unlocks. */
+.offer-frame {
+  position: relative;
+  overflow: hidden;
+  padding: 28px 22px 24px;
+  border: 1px solid oklch(0.634 0.25 28.5 / 72%);
+  border-radius: 8px;
+  background: linear-gradient(145deg, oklch(0.12 0 0), oklch(0.055 0 0));
+  box-shadow: 0 0 0 1px oklch(0.634 0.25 28.5 / 12%), 0 16px 44px oklch(0 0 0 / 38%);
+}
+.offer-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0 18% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+.offer-eyebrow {
+  margin: 0 0 10px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+.offer-title {
+  margin: 0;
+  color: var(--foreground);
+  font-size: clamp(22px, 5vw, 30px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+.offer-description {
+  margin: 13px 0 4px;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.offer-price {
+  margin: 0;
+  color: var(--primary);
+  font-size: clamp(46px, 11vw, 62px);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  text-shadow: 0 0 26px oklch(0.634 0.25 28.5 / 18%);
+}
+.offer-price span {
+  font-size: 0.42em;
+  letter-spacing: 0;
+  vertical-align: 0.35em;
+}
+.offer-note {
+  margin: 9px 0 20px;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.offer-frame .vsl-checkout { margin-top: 2px; }
+@media (min-width: 640px) {
+  .offer-frame { padding: 34px 38px 32px; }
+  .offer-description { font-size: 14px; }
+}
