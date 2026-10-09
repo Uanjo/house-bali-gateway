@@ -3,6 +3,7 @@ import { Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import poster from "@/assets/bali-video-poster.jpg";
 import { vslConfig } from "@/lib/vsl-config";
+import { trackMetaEvent } from "@/lib/meta-tracking";
 
 export function VslPlayer({ onUnlock }: { onUnlock: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -10,6 +11,9 @@ export function VslPlayer({ onUnlock }: { onUnlock: () => void }) {
   const watchedRef = useRef(0);
   const lastTickRef = useRef<number | null>(null);
   const unlockedRef = useRef(false);
+  const startedRef = useRef(false);
+  const milestonesRef = useRef(new Set<number>());
+  const milestones = [10, 25, 50, 75, 90, 100];
   const [needsPlay, setNeedsPlay] = useState(true);
   const [failed, setFailed] = useState(false);
 
@@ -50,6 +54,16 @@ export function VslPlayer({ onUnlock }: { onUnlock: () => void }) {
       video.currentTime = positionRef.current;
     }
     lastTickRef.current = now;
+    const duration = video.duration;
+    if (Number.isFinite(duration) && duration > 0) {
+      const percent = Math.min(100, Math.floor((watchedRef.current / duration) * 100));
+      for (const milestone of milestones) {
+        if (percent >= milestone && !milestonesRef.current.has(milestone)) {
+          milestonesRef.current.add(milestone);
+          trackMetaEvent("VideoProgress", { video_id: "house-bali-vsl", percent: milestone, duration_seconds: Math.round(duration), watched_seconds: Math.round(watchedRef.current), milestone: `${milestone}%` });
+        }
+      }
+    }
     if (!unlockedRef.current && watchedRef.current >= vslConfig.unlockAfterSeconds) {
       unlockedRef.current = true;
       onUnlock();
@@ -84,10 +98,23 @@ export function VslPlayer({ onUnlock }: { onUnlock: () => void }) {
             const video = videoRef.current;
             if (video && video.playbackRate !== 1) video.playbackRate = 1;
           }}
-          onPlaying={() => { setNeedsPlay(false); lastTickRef.current = performance.now(); }}
+          onPlaying={() => {
+            setNeedsPlay(false);
+            lastTickRef.current = performance.now();
+            if (!startedRef.current) {
+              startedRef.current = true;
+              trackMetaEvent("VideoStarted", { video_id: "house-bali-vsl" });
+            }
+          }}
           onPause={() => { setNeedsPlay(true); lastTickRef.current = null; }}
           onWaiting={() => { lastTickRef.current = null; }}
-          onEnded={() => { setNeedsPlay(false); }}
+          onEnded={() => {
+            setNeedsPlay(false);
+            if (!milestonesRef.current.has(100) && videoRef.current && Number.isFinite(videoRef.current.duration) && watchedRef.current / videoRef.current.duration >= 0.99) {
+              milestonesRef.current.add(100);
+              trackMetaEvent("VideoProgress", { video_id: "house-bali-vsl", percent: 100, duration_seconds: Math.round(videoRef.current.duration), watched_seconds: Math.round(watchedRef.current), milestone: "100%" });
+            }
+          }}
           onError={() => setFailed(true)}
         />
       ) : (
