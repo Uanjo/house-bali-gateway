@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { VslPlayer } from "@/components/vsl-player";
@@ -23,6 +23,25 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [unlocked, setUnlocked] = useState(false);
   const [secondVideoWatched, setSecondVideoWatched] = useState(false);
+  const secondVideoRef = useRef<HTMLVideoElement>(null);
+  const secondVideoPositionRef = useRef(0);
+  const secondVideoWatchedSecondsRef = useRef(0);
+  const secondVideoLastTickRef = useRef<number | null>(null);
+
+  const trackSecondVideoPlayback = () => {
+    const video = secondVideoRef.current;
+    if (!video || video.seeking || video.paused) return;
+    const now = performance.now();
+    const delta = video.currentTime - secondVideoPositionRef.current;
+    const elapsed = secondVideoLastTickRef.current === null ? 0 : (now - secondVideoLastTickRef.current) / 1000;
+    if (delta >= 0 && delta <= Math.max(1.25, elapsed + 0.25)) {
+      secondVideoWatchedSecondsRef.current += Math.min(delta, elapsed);
+      secondVideoPositionRef.current = video.currentTime;
+    } else {
+      video.currentTime = secondVideoPositionRef.current;
+    }
+    secondVideoLastTickRef.current = now;
+  };
 
   return (
     <main className="vsl-page">
@@ -52,12 +71,30 @@ function Index() {
                 {vslConfig.secondVideoUrl ? (
                   <div className="video-stage second-video-stage">
                     <video
+                      ref={secondVideoRef}
                       className="video-media"
                       src={vslConfig.secondVideoUrl}
                       controls
                       playsInline
                       preload="metadata"
-                      onEnded={() => setSecondVideoWatched(true)}
+                      onPlaying={() => { secondVideoLastTickRef.current = performance.now(); }}
+                      onWaiting={() => { secondVideoLastTickRef.current = null; }}
+                      onPause={() => { secondVideoLastTickRef.current = null; }}
+                      onTimeUpdate={trackSecondVideoPlayback}
+                      onSeeking={() => {
+                        const video = secondVideoRef.current;
+                        if (video && Math.abs(video.currentTime - secondVideoPositionRef.current) > 0.15) {
+                          video.currentTime = secondVideoPositionRef.current;
+                        }
+                        secondVideoLastTickRef.current = null;
+                      }}
+                      onEnded={() => {
+                        const video = secondVideoRef.current;
+                        if (video && Number.isFinite(video.duration) && video.duration > 0 &&
+                          secondVideoWatchedSecondsRef.current / video.duration >= 0.98) {
+                          setSecondVideoWatched(true);
+                        }
+                      }}
                       onContextMenu={(event) => event.preventDefault()}
                       aria-label="Vídeo final antes da oferta House Bali"
                     />
