@@ -25,6 +25,15 @@ export function VslPlayer({ onUnlock }: { onUnlock: () => void }) {
     const video = videoRef.current;
     if (!video) return;
     video.muted = false;
+    video.volume = 1;
+    // Fullscreen APIs require a user gesture in most browsers. Keep playback
+    // working even when fullscreen is unavailable or blocked by the browser.
+    if (video.requestFullscreen) {
+      void video.requestFullscreen().catch(() => undefined);
+    } else {
+      const legacyVideo = video as HTMLVideoElement & { webkitEnterFullscreen?: () => void };
+      try { legacyVideo.webkitEnterFullscreen?.(); } catch { /* Browser does not support native fullscreen. */ }
+    }
     void video.play().then(() => setNeedsPlay(false)).catch(() => setNeedsPlay(true));
   };
 
