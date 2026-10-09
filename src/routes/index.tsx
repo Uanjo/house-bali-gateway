@@ -23,6 +23,8 @@ function Index() {
   const [unlocked, setUnlocked] = useState(false);
   return (
     <main className="vsl-page">
+      <div className="ambient ambient-one" aria-hidden="true" />
+      <div className="ambient ambient-two" aria-hidden="true" />
       <div className="brand" role="img" aria-label="House Bali Oficial">
         <svg className="brand-mark" viewBox="0 0 40 28" fill="none" aria-hidden="true">
           <path d="M3 14 20 3l17 11M8 12v13h24V12M16 25V15h8v10" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
@@ -31,9 +33,10 @@ function Index() {
         <span className="brand-official">O F I C I A L</span>
       </div>
       <div className="vsl-content">
-        <h1 className="vsl-headline"><span className="headline-accent">Acesso Privado Liberado por Tempo Limitado</span></h1>
+        <p className="intro-kicker"><span className="status-dot" /> ACESSO PRIVADO <span className="kicker-divider">/</span> HOUSE BALI</p>
+        <h1 className="vsl-headline"><span className="headline-accent"><span className="headline-line">Acesso Privado</span> <span className="headline-line headline-glow">Liberado por Tempo Limitado</span></span></h1>
         <p className="vsl-subheadline">Só quem assiste o vídeo completo libera a entrada na área exclusiva House Bali. Vagas sendo preenchidas agora.</p>
-        <p className="vsl-curiosity">O que você vai ver a seguir não fica disponível por muito tempo…</p>
+        <p className="vsl-curiosity"><span className="curiosity-spark" aria-hidden="true">✦</span> O que você vai ver a seguir não fica disponível por muito tempo…</p>
         <VslPlayer onUnlock={() => setUnlocked(true)} />
         {unlocked && (
           <div className="conversion-area" aria-live="polite">
@@ -43,13 +46,9 @@ function Index() {
               <p className="offer-description">Entre na área exclusiva House Bali por apenas</p>
               <p className="offer-price"><span>R$</span> 9,99</p>
               <p className="offer-note">Seu acesso começa aqui.</p>
-              {vslConfig.checkoutUrl ? (
-                <Button variant="checkout" asChild>
-                  <a href={vslConfig.checkoutUrl}>QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></a>
-                </Button>
-              ) : (
-                <Button variant="checkout" disabled title="Checkout ainda não configurado">QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></Button>
-              )}
+              <Button variant="checkout" asChild>
+                <a href={vslConfig.checkoutUrl} target="_blank" rel="noopener noreferrer">QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></a>
+              </Button>
             </section>
             <p className="urgency">Oferta por tempo limitado. Esta página pode ser removida a qualquer momento.</p>
           </div>
