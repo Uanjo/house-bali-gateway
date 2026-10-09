@@ -1,9 +1,18 @@
 declare global {
   interface Window {
-    fbq?: (...args: unknown[]) => void;
-    _fbq?: (...args: unknown[]) => void;
+    fbq?: FbqFunction;
+    _fbq?: FbqFunction;
   }
 }
+
+type FbqFunction = {
+  (...args: unknown[]): void;
+  callMethod?: (...args: unknown[]) => void;
+  queue: unknown[][];
+  push: (...args: unknown[]) => void;
+  loaded: boolean;
+  version: string;
+};
 
 export const META_PIXEL_ID = "1552429686559209";
 
@@ -18,22 +27,22 @@ function readCookie(name: string): string | undefined {
 
 export function initMetaPixel() {
   if (typeof window === "undefined" || window.fbq) return;
-  const fbq = function (...args: unknown[]) {
-    const fn = fbq as typeof fbq & { callMethod?: (...values: unknown[]) => void; queue: unknown[][]; loaded?: boolean; version: string };
-    if (fn.callMethod) fn.callMethod(...args);
-    else fn.queue.push(args);
-  } as typeof window.fbq & { callMethod?: (...args: unknown[]) => void; queue: unknown[][]; push: (...args: unknown[]) => void; loaded?: boolean; version: string };
-  fbq.queue = [];
-  fbq.push = fbq;
-  fbq.loaded = true;
-  fbq.version = "2.0";
+
+  const fbq: FbqFunction = Object.assign(
+    (...args: unknown[]) => {
+      if (fbq.callMethod) fbq.callMethod(...args);
+      else fbq.queue.push(args);
+    },
+    { queue: [] as unknown[][], loaded: true, version: "2.0", push: (...args: unknown[]) => fbq(...args) },
+  );
+
   window.fbq = fbq;
   window._fbq = fbq;
   const script = document.createElement("script");
   script.async = true;
   script.src = "https://connect.facebook.net/en_US/fbevents.js";
   document.head.appendChild(script);
-  window.fbq("init", META_PIXEL_ID);
+  fbq("init", META_PIXEL_ID);
 }
 
 export function trackMetaEvent(eventName: string, params: MetaParams = {}, standard = false) {
@@ -58,6 +67,6 @@ export function trackMetaEvent(eventName: string, params: MetaParams = {}, stand
     keepalive: true,
     credentials: "same-origin",
   }).catch(() => {
-    // Browser Pixel tracking still works if the server endpoint is not configured.
+    // Browser Pixel still works if server-side Conversions API is not configured.
   });
 }
