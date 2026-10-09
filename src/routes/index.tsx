@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { VslPlayer } from "@/components/vsl-player";
 import { vslConfig } from "@/lib/vsl-config";
+import { trackMetaEvent } from "@/lib/meta-tracking";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,7 +48,7 @@ function Index() {
               <p className="offer-price"><span>R$</span> 9,99</p>
               <p className="offer-note">Seu acesso começa aqui.</p>
               <Button variant="checkout" asChild>
-                <a href={vslConfig.checkoutUrl} target="_blank" rel="noopener noreferrer">QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></a>
+                <a href={vslConfig.checkoutUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackMetaEvent("InitiateCheckout", { content_name: "Acesso exclusivo House Bali", content_ids: "house-bali-access", content_type: "product", value: 9.99, currency: "BRL" }, true)}>QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></a>
               </Button>
             </section>
             <p className="urgency">Oferta por tempo limitado. Esta página pode ser removida a qualquer momento.</p>
