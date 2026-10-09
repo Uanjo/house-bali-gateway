@@ -263,3 +263,133 @@
   .offer-frame { padding: 34px 38px 32px; }
   .offer-description { font-size: 14px; }
 }
+
+
+/* Lively editorial intro: subtle ambient light, staggered reveal and responsive accents. */
+.vsl-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 0%, oklch(0.24 0.11 28 / 34%), transparent 42%),
+    var(--background);
+}
+.vsl-page > :not(.ambient) { position: relative; z-index: 1; }
+.ambient {
+  position: absolute;
+  z-index: 0;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(90px);
+  opacity: 0.13;
+  background: var(--primary);
+  animation: ambient-drift 12s ease-in-out infinite alternate;
+}
+.ambient-one { top: 100px; left: -240px; }
+.ambient-two { top: 420px; right: -250px; animation-delay: -6s; }
+.intro-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 17px;
+  padding: 8px 13px;
+  border: 1px solid oklch(0.634 0.25 28.5 / 34%);
+  border-radius: 999px;
+  background: oklch(0.634 0.25 28.5 / 7%);
+  color: oklch(0.82 0.12 28.5);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  animation: intro-rise 650ms cubic-bezier(.2,.8,.2,1) both;
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 12px oklch(0.634 0.25 28.5 / 90%);
+  animation: dot-breathe 2.2s ease-in-out infinite;
+}
+.kicker-divider { color: oklch(0.48 0 0); }
+.vsl-headline {
+  text-wrap: balance;
+  animation: intro-rise 750ms 90ms cubic-bezier(.2,.8,.2,1) both;
+}
+.headline-line { display: block; }
+.headline-glow {
+  margin-top: 3px;
+  background: linear-gradient(100deg, oklch(0.76 0.21 28.5), oklch(0.57 0.25 28.5) 48%, oklch(0.82 0.16 24));
+  background-size: 180% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: headline-shimmer 7s ease-in-out infinite alternate;
+}
+.vsl-subheadline { animation: intro-rise 750ms 180ms cubic-bezier(.2,.8,.2,1) both; }
+.vsl-curiosity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  animation: intro-rise 750ms 260ms cubic-bezier(.2,.8,.2,1) both;
+}
+.curiosity-spark { color: var(--primary); font-size: 16px; text-shadow: 0 0 16px oklch(0.634 0.25 28.5 / 60%); }
+.video-stage {
+  border-color: oklch(0.634 0.25 28.5 / 32%);
+  box-shadow: 0 16px 55px oklch(0 0 0 / 40%), 0 0 35px oklch(0.634 0.25 28.5 / 7%);
+  animation: intro-rise 850ms 330ms cubic-bezier(.2,.8,.2,1) both;
+}
+.offer-frame {
+  background:
+    radial-gradient(ellipse at 50% 0%, oklch(0.634 0.25 28.5 / 12%), transparent 62%),
+    linear-gradient(145deg, oklch(0.12 0 0), oklch(0.055 0 0));
+}
+.offer-eyebrow { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.offer-eyebrow::before, .offer-eyebrow::after {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: oklch(0.634 0.25 28.5 / 65%);
+}
+.offer-title { text-wrap: balance; }
+.vsl-checkout {
+  transition: transform 180ms ease, filter 180ms ease, box-shadow 180ms ease;
+}
+.vsl-checkout:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.vsl-checkout:active { transform: translateY(0) scale(0.99); }
+@keyframes intro-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes headline-shimmer {
+  from { background-position: 0% center; }
+  to { background-position: 100% center; }
+}
+@keyframes dot-breathe {
+  0%, 100% { opacity: 1; box-shadow: 0 0 12px oklch(0.634 0.25 28.5 / 90%); }
+  50% { opacity: 0.65; box-shadow: 0 0 4px oklch(0.634 0.25 28.5 / 50%); }
+}
+@keyframes ambient-drift {
+  from { transform: translate3d(0, 0, 0) scale(0.92); }
+  to { transform: translate3d(35px, 25px, 0) scale(1.08); }
+}
+@media (max-width: 420px) {
+  .vsl-page { padding-right: 15px; padding-left: 15px; }
+  .intro-kicker { gap: 7px; font-size: 8px; letter-spacing: 0.12em; }
+  .vsl-headline { font-size: clamp(27px, 8vw, 34px); }
+  .vsl-subheadline { font-size: 13px; }
+  .vsl-curiosity { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient, .intro-kicker, .status-dot, .vsl-headline, .headline-glow,
+  .vsl-subheadline, .vsl-curiosity, .video-stage {
+    animation: none !important;
+  }
+  .vsl-checkout { transition: none; }
+}
