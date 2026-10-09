@@ -37,13 +37,20 @@ function Index() {
         <VslPlayer onUnlock={() => setUnlocked(true)} />
         {unlocked && (
           <div className="conversion-area" aria-live="polite">
-            {vslConfig.checkoutUrl ? (
-              <Button variant="checkout" asChild>
-                <a href={vslConfig.checkoutUrl}>QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></a>
-              </Button>
-            ) : (
-              <Button variant="checkout" disabled title="Checkout ainda não configurado">QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></Button>
-            )}
+            <section className="offer-frame" aria-label="Oferta de acesso exclusivo House Bali">
+              <p className="offer-eyebrow">CONVITE EXCLUSIVO</p>
+              <h2 className="offer-title">Garanta sua exclusividade</h2>
+              <p className="offer-description">Entre na área exclusiva House Bali por apenas</p>
+              <p className="offer-price"><span>R$</span> 9,99</p>
+              <p className="offer-note">Seu acesso começa aqui.</p>
+              {vslConfig.checkoutUrl ? (
+                <Button variant="checkout" asChild>
+                  <a href={vslConfig.checkoutUrl}>QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></a>
+                </Button>
+              ) : (
+                <Button variant="checkout" disabled title="Checkout ainda não configurado">QUERO MEU ACESSO AGORA<ArrowRight aria-hidden="true" /></Button>
+              )}
+            </section>
             <p className="urgency">Oferta por tempo limitado. Esta página pode ser removida a qualquer momento.</p>
           </div>
         )}
