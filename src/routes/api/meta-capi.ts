@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+declare const process: { env: Record<string, string | undefined> };
+
 const ALLOWED_EVENTS = new Set(["PageView", "VideoStarted", "VideoProgress", "InitiateCheckout"]);
 
 type IncomingEvent = {
