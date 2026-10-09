@@ -3,4 +3,4 @@
 - [x] Prepare placeholder and playback with no timeline or seeking.
 - [x] Reveal checkout action after 60 seconds of actual viewing.
 - [ ] Insert final video and checkout destination — awaiting user assets.
-- [ ] Verify mobile and desktop rendering and playback gating.
+- [x] Verify mobile and desktop rendering and playback gating.
